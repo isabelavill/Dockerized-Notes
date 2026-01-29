@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Note } from './note.entity';
+import { createNoteDto } from './dto/create-note.dto';
 
 @Injectable()
 export class NotesService {
@@ -9,8 +10,8 @@ export class NotesService {
         @InjectRepository(Note)
         private readonly notesRepository: Repository<Note>,
     ){}
-    create(title: string, content: string){
-        const note = this.notesRepository.create({title, content})
+    async create(dto: createNoteDto){
+        const note = this.notesRepository.create(dto)
         return this.notesRepository.save(note)
     }
     findAll(){
@@ -18,11 +19,18 @@ export class NotesService {
             order: {createdAt: 'DESC'}
         })
     }
-    findOne(id:string){
-        return this.notesRepository.findOneBy({id})
+    async findOne(id:string){
+        const note = await this.notesRepository.findOne({ where: {id}});
+        if (!note){
+            throw new NotFoundException('Note not found');
+        }
+        return note;
     }
-    remove(id: string){
-        return this.notesRepository.delete(id)
+    async remove(id: string){
+        const result = await this.notesRepository.delete(id);
+        if (result.affected === 0){
+            throw new NotFoundException('Note not found');
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { createNoteDto } from './dto/create-note.dto';
 
@@ -8,8 +8,9 @@ export class NotesController {
     constructor(private readonly notesService: NotesService){}
 
     @Post()
+    @HttpCode(HttpStatus.CREATED) //201
     create(@Body() dto: createNoteDto){
-        return this.notesService.create(dto.title, dto.content)
+        return this.notesService.create(dto)
     }
     @Get()
     findAll(){
@@ -20,6 +21,7 @@ export class NotesController {
         return this.notesService.findOne(id)
     }
     @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)  //204
     remove(@Param('id') id:string){
         return this.notesService.remove(id)
     }

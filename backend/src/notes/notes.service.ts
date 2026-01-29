@@ -18,5 +18,11 @@ export class NotesService {
             order: {createdAt: 'DESC'}
         })
     }
+    findOne(id:string){
+        return this.notesRepository.findOneBy({id})
+    }
+    remove(id: string){
+        return this.notesRepository.delete(id)
+    }
 
 }

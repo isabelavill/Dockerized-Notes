@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { NotesService } from './notes.service';
-import { createNoteDto } from './dto/create-note.dto';
+import { CreateNoteDto } from './dto/create-note.dto';
 
 
 @Controller('notes')
@@ -9,7 +9,7 @@ export class NotesController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED) //201
-    create(@Body() dto: createNoteDto){
+    create(@Body() dto: CreateNoteDto){
         return this.notesService.create(dto)
     }
     @Get()

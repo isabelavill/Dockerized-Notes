@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Note } from './note.entity';
-import { createNoteDto } from './dto/create-note.dto';
+import { CreateNoteDto } from './dto/create-note.dto';
 
 @Injectable()
 export class NotesService {
@@ -10,7 +10,7 @@ export class NotesService {
         @InjectRepository(Note)
         private readonly notesRepository: Repository<Note>,
     ){}
-    async create(dto: createNoteDto){
+    async create(dto: CreateNoteDto){
         const note = this.notesRepository.create(dto)
         return this.notesRepository.save(note)
     }
